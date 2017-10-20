@@ -1,0 +1,81 @@
+Vetores estaticos (arrays)
+
+int v1[100] -> vetor de nome v1 com 100 elementos
+
+todos os elementos tem o mesmo tipo de vetor
+
+um pedaço da memoria: pc aloca o espaço total definido por tamanho*sizeof(tipo)
+int - 32bits, com array 10 fica 320.
+
+No C, a array deve ser criada já com um tamanho definido, n pode usar a entrada
+do usuario
+
+quando dá print no array ele dá o endereço do primeiro elemento
+o espaço reservado fica:   0x1120:0009 (9 bits)
+
+Ex. X[4]=10. O compilador pega o endereço, adiciona 4*sizeof(tipodevariavel).
+Ex. com char x[9], X[3]-> 0x1120 + 3*1 = 0x1123
+Para adicionar ao primeiro elemento, você soma zero! É por isso que o array "começa"
+no 0, pois soma zero para o primeiro elemento ( X[0] ).
+No C meche diretamente na memória, nas outras é meio que uma outra entidade, 
+poderia começar no 1 mas preferiram começar no 0.
+
+O C não funciona o length, 
+o array não leva consigo seu tamanho! a função deve mandar também o tamanho >.>
+
+(float i = 0.0 -> cara lendo já sabe que é número real)
+
+IMPORTANTE! quando passamos um array para uma outra função, o "valor" do array
+é na verdade o endereço da memória, o qual é passado!
+Isso faz com que modificações do array em outras funções modificam ela permanentemente.
+Arrays criados nas funções usam o mesmo endereço da original, modificando o valor.
+Isso é diferente das variaveis!
+
+(int array[4]={1,1,1,1};
+
+Arrays multidimensionais
+Matriz mxn
+int A[m][n];
+
+10 documentos contendo 20 palavras de ate 12 caracteres
+char corpus[10][20][12];  //tipo um endereco
+
+na função a unidimensional precisa ser
+funcao( int array[][M] );
+
+
+Strings
+string n tem em c, é um array de chars
+na declaração declaramos o valor máximo
+os chars que n usam ficam da forma '\0';
+
+se vc faz char string[100];
+string[0]='O';
+string...
+
+printf("%s\n", string);
+
+isso vai ficar imprimindo o que tiver na memoria até ele achar
+um \0 e parar depois.
+
+sempre tenha espaço para o ultimo caractere ter 0;
+
+
+observação, 
+int x[100];
+x[110] = 3; 
+
+isso funciona, voce acessa memoria externa
+
+PROVA 3 QUESTOES
+1- como estruturar um programa, exemplo da aula de hoje, modularizado
+2- recursao, estudar be isso
+3- encontrar o erro ou bug no programa e corrigir depois
+
+cada uma vale 3 pontos
+
+1 ponto extra quem escrever o programa da maneira formatada do maneira certa
+
+pratica, no computador, com consulta
+
+podem testar no computador depois escrever na folha de respostas
