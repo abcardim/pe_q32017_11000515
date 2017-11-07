@@ -32,7 +32,7 @@ int main() {
     scanf("%s", entrada);
     */
     
-    fgets(entrada, 255, stdin);
+    scanf("%s", entrada);
     
     printf("%d\n", len(entrada));
     
