@@ -1,5 +1,5 @@
 /*  
-*   Receba uma string e retorne-a invertida.
+*   Receba uma string (por 'fgets') e retorne-a invertida.
 *
 *   Data: 06/11/2017
 *   Autor: André B. Cardim
@@ -18,23 +18,27 @@ int len(char * s)
     return l;
 }
 
-//*char * iverte_s ( char * ps1)
+void print_invertido ( char * s, int l)
+{
+    while (l>=0){
+        printf("%c", *(s+l));
+        l--;
+    }
+    printf("\n");
+}
 
-
-/* Objetivo inicial: retornar o tamanho da string */
 int main() {
     char entrada[255];
     /*
-    ---OPCAO 1-----
+    ---OPCAO 1----- (Parece que considera o Enter)
     fgets(entrada, 255, stdin);
  
     ---OPCAO 2-----
     scanf("%s", entrada);
     */
-    
-    scanf("%s", entrada);
-    
-    printf("%d\n", len(entrada));
+    fgets(entrada, 255, stdin);
+ 
+    print_invertido(entrada, len(entrada));
     
     return 0;
 }
