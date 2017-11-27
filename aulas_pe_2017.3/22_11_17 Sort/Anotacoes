@@ -1,0 +1,32 @@
+Busca
+
+No pior caso precisa de n operações
+
+Podemos buscar apos um tipo de ordenacao para uma busca mais eficiente
+Ex.: Em ordem crescente numerica, pode ir comparando qual é maior menor
+durante a busca
+
+Bubble sort: Se o proximo for maior que o atual, troca os dois.
+Isso acaba arrastando tambem um mesmo numero grande para o fim para
+sua posicao correta.
+
+Como otimizar ele?
+Na primeira passagem o maior numero ja estara no fim.
+A segunda passagem pode ignorar o ultimo.
+
+Otimizacao 2
+Se em um ponto do vetor/algoritmo nao foi realizado a troca 
+(pois o proximo ja era maior). O que significa? 
+Se não faz nenhuma troca na passagem inteira, ja esta ordenado, acabou!
+
+insertion sort
+A ideia principal é inserir o elemento ja na sua posicao correta
+Faz a ordenacao trazendo o menor de cada passagem para o começo
+começa de tras para frente, mas esse começo atras vai andando da 
+esquerda para diretia, vai aumentando
+
+No lab:
+quicksort, busca binaria
+
+ordenamento de struct, ou seja, ordenar por meio de uma das caracteristicas
+do struct

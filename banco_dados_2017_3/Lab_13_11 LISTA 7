@@ -1,0 +1,268 @@
+-- Caso de problema, execute isso varias vezes
+-- Para deletar as tables
+SET @tables = NULL;
+SELECT GROUP_CONCAT(table_schema, '.`', table_name, '`') INTO @tables FROM
+(select * from
+ information_schema.tables 
+  WHERE table_schema = 'myDatabase' AND table_name LIKE 'del%'
+  LIMIT 10) TT;
+
+SET @tables = CONCAT('DROP TABLE ', @tables);
+select @tables;
+PREPARE stmt1 FROM @tables;
+EXECUTE stmt1;
+DEALLOCATE PREPARE stmt1;
+-- -- ---- -- - - -- - 
+
+
+
+
+-- Criacao das tabelas:
+
+CREATE TABLE CURSO(
+       NumCurso INTEGER NOT NULL,
+       Nome CHAR(30) NOT NULL,
+       TotalCreditos INTEGER NOT NULL,
+       CONSTRAINT CHAVECURSO 
+         PRIMARY KEY (NumCurso)
+)ENGINE=INNODB;
+
+CREATE TABLE ALUNO(
+       NumAluno INTEGER NOT NULL,
+       Nome CHAR(70) NOT NULL,
+       Endereco CHAR(70) NOT NULL,
+       Cidade CHAR(25) NOT NULL,
+       Telefone CHAR(25),
+       NumCurso INTEGER NOT NULL,
+       CONSTRAINT CHAVEALUNO
+         PRIMARY KEY (NumAluno),
+       CONSTRAINT ESTRANGEIRACURSO
+         FOREIGN KEY (NumCurso) REFERENCES CURSO (NumCurso)
+) ENGINE=INNODB;
+
+CREATE TABLE DISCIPLINA(
+       NumDisp INTEGER NOT NULL,
+       Nome CHAR(30) NOT NULL,
+       QuantCreditos INTEGER NOT NULL,
+       CONSTRAINT CHAVEDISCIPLINA
+         PRIMARY KEY (NumDisp)
+)ENGINE=INNODB;
+
+CREATE TABLE PROFESSOR(
+       NumFunc INTEGER NOT NULL,
+       Nome CHAR(70) NOT NULL,
+       Admissao DATE NOT NULL,
+       AreaPesquisa CHAR(30),
+       CONSTRAINT CHAVEPROFESSOR
+         PRIMARY KEY (NumFunc)
+)ENGINE=INNODB;
+
+CREATE TABLE AULA(
+       NumAluno INTEGER NOT NULL,
+       NumDisp INTEGER NOT NULL,
+       NumFunc INTEGER NOT NULL,
+       Semestre CHAR(10) NOT NULL,
+       Nota DECIMAL(5,2) NOT NULL,
+       CONSTRAINT CHAVEAULA
+         PRIMARY KEY (NumAluno, NumDisp, NumFunc, Semestre),
+       CONSTRAINT ESTRANGEIRAALUNO
+         FOREIGN KEY (NumAluno) REFERENCES ALUNO(NumAluno),
+       CONSTRAINT ESTRANGEIRADISCIPLINA
+         FOREIGN KEY (NumDisp) REFERENCES DISCIPLINA(NumDisp),
+       CONSTRAINT ESTRANGEIRAPROFESSOR
+         FOREIGN KEY (NumFunc) REFERENCES PROFESSOR (NumFunc)
+)ENGINE=INNODB;
+
+CREATE TABLE DISCIPLINACURSO(
+       NumDisp INTEGER NOT NULL,
+       NumCurso INTEGER NOT NULL,
+       CONSTRAINT CHAVEDISPCURSO
+         PRIMARY KEY (NumDisp, NumCurso),
+       CONSTRAINT ESTRANGEIRADISP
+         FOREIGN KEY (NumDisp) REFERENCES DISCIPLINA (NumDisp),
+       CONSTRAINT ESTRANGEIRACURSO_B
+         FOREIGN KEY (NumCurso) REFERENCES CURSO (NumCurso)
+)ENGINE=INNODB;
+
+-- CURSO
+insert into Curso values(2142,'Engenharia Civil',1500); 
+insert into Curso values(2143,'Ciência da Computação',2000); 
+insert into Curso values(2144,'Direito',1750); 
+insert into Curso values(2145,'Pedagogia',1500); 
+insert into Curso values(2146,'Odontologia',1600); 
+
+-- DISCIPLINA
+insert into Disciplina values(1,'Banco de Dados',30); 
+insert into Disciplina values(2,'Estrutura de Dados',30); 
+insert into Disciplina values(3,'Direito Penal',25); 
+insert into Disciplina values(4,'Calculo Numerico',30); 
+insert into Disciplina values(5,'Psicologia Infantil',25); 
+insert into Disciplina values(6,'Direito Tributario',33); 
+insert into Disciplina values(7,'Engenharia de Software',27); 
+
+-- DISCIPLINACURSO
+insert into DisciplinaCurso values(1,2143); 
+insert into DisciplinaCurso values(2,2143); 
+insert into DisciplinaCurso values(3,2144); 
+insert into DisciplinaCurso values(4,2143); 
+insert into DisciplinaCurso values(4,2142); 
+insert into DisciplinaCurso values(5,2145); 
+insert into DisciplinaCurso values(6,2144); 
+insert into DisciplinaCurso values(7,2143); 
+insert into DisciplinaCurso values(7,2142); 
+
+-- PROFESSOR
+insert into Professor values(45675, 'Abgair Simon Ferreira', '1992-04-10', 'Banco de Dados');
+insert into Professor values(45690, 'Ramon Travanti', '1993-05-20', 'Direito Romano'); 
+insert into Professor values(45691, 'Gustavo Gouveia Netto', '1993-04-05', 'Sociologia'); 
+insert into Professor values(45692, 'Marcos Salvador', '1993-03-31', 'Matematica Financeira'); 
+insert into Professor values(45693, 'Cintia Falcão', '1993-02-15', 'Engenharia de Software'); 
+
+
+-- ALUNO
+insert into Aluno values(111, 'Edvaldo Carlos Silva', 'Av. São Carlos, 186', 'São Carlos', 0172769999, 2143); 
+insert into Aluno values(112, 'João Benedito Scapin', 'R. Jose Bonifacio, 70', 'São Carlos', 0172738974, 2142); 
+insert into Aluno values(113, 'Carol Antonia Silveira', 'R. Luiz Camoes, 120', 'Ibate', 0172788568, 2145); 
+insert into Aluno values(114, 'Marcos Joao Casanova', 'Av. São Carlos, 176', 'São Carlos', 0172749874, 2143); 
+insert into Aluno values(115, 'Simone Cristina Lima', 'R. Raul Junior, 180', 'São Carlos', 0172739865, 2144); 
+insert into Aluno values(116, 'Ailton Castro', 'R. Antonio Carlos, 120', 'Ibate', 0172788563, 2142); 
+insert into Aluno values(117, 'Jose Paulo Figueira', 'R. XV de Novembro, 871', 'São Carlos', 0172749873, 2145); 
+
+-- AULA
+insert into Aula values(111, 1, 45675, 011998, 8.5); 
+insert into Aula values(111, 2, 45675, 011998, 6.0); 
+insert into Aula values(111, 2, 45675, 021998, 7.0); 
+insert into Aula values(115, 3, 45690, 011998, 4.5); 
+insert into Aula values(115, 3, 45690, 021998, 7.5); 
+insert into Aula values(111, 4, 45692, 011998, 8.0); 
+insert into Aula values(112, 4, 45692, 011998, 7.0); 
+insert into Aula values(113, 5, 45691, 011998, 7.5); 
+insert into Aula values(115, 6, 45690, 011998, 9.0); 
+insert into Aula values(111, 7, 45693, 011998, 10.0); 
+insert into Aula values(112, 7, 45693, 011998, 5.5); 
+insert into Aula values(112, 7, 45693, 021998, 10.0); 
+insert into Aula values(114, 1, 45675, 011998, 7.0); 
+insert into Aula values(114, 2, 45675, 011998, 8.0); 
+insert into Aula values(114, 4, 45692, 011998, 6.5); 
+insert into Aula values(114, 4, 45692, 021998, 8.5); 
+insert into Aula values(116, 4, 45692, 011998, 3.5); 
+insert into Aula values(116, 4, 45692, 021998, 9.5); 
+insert into Aula values(114, 7, 45693, 011998, 9.5); 
+insert into Aula values(116, 7, 45693, 011998, 8.5); 
+
+
+-- Exercícios
+
+-- a) Quais o os cursos da universidade.
+SELECT NOME AS 'CURSOS DA UNIVERSIDADE' FROM CURSO;
+
+-- b) Quais os nomes e telefones de alunos da cidade de São Carlos - SP em ordem DESC de nome.
+SELECT NOME, TELEFONE
+FROM ALUNO
+ORDER BY NOME DESC;
+
+-- c) Quais os nomes de professores que foram contratados antes de 01/jan/1993
+SELECT NOME
+FROM PROFESSOR
+WHERE ADMISSAO < '1993-01-01';
+
+-- d) Quais os nomes de alunos que iniciam com a letra 'J'.
+SELECT NOME AS 'NOME ALUNO'
+FROM ALUNO
+WHERE NOME LIKE 'J%';
+
+-- e) Quais os nomes das disciplinas do curso de Ciência da Computação.
+SELECT DISCIPLINA.NOME AS 'DISCIPLINAS DO BCC'
+FROM CURSO, DISCIPLINA, DISCIPLINACURSO
+WHERE CURSO.NOME = 'Ciência da Computação' 
+AND DISCIPLINA.NUMDISP  = DISCIPLINACURSO.NUMDISP 
+AND DISCIPLINACURSO.NUMCURSO = CURSO.NUMCURSO;
+
+-- f) Quais os nomes dos cursos que possuem no curriculum a disciplina Cálculo Numérico.
+SELECT CURSO.NOME AS 'Cursos com CalcNum'
+FROM CURSO, DISCIPLINA, DISCIPLINACURSO
+WHERE DISCIPLINA.NOME = 'Calculo Numerico'
+AND AULA.NUMDISP  = DISCIPLINACURSO.NUMDISP;
+
+-- g) Quais os nomes das disciplina que o aluno Marcos João Casanova cursou no 1º semestre de 1998;
+SELECT DISCIPLINA.NOME AS 'Disciplinas cursadas'
+FROM ALUNO, AULA, DISCIPLINA
+WHERE ALUNO.NOME LIKE 'Marcos J%'
+AND AULA.SEMESTRE = '11998'
+AND AULA.NUMALUNO = ALUNO.NUMALUNO
+AND AULA.NUMDISP = DISCIPLINA.NUMDISP;
+
+-- h) Quais os nomes das disciplinas que o aluno Ailton Castro foi reprovado
+SELECT DISCIPLINA.NOME AS 'Reprovacoes do aluno'
+FROM ALUNO, AULA, DISCIPLINA
+WHERE ALUNO.NOME LIKE 'ailton c%'
+AND AULA.NOTA < 7.0
+AND ALUNO.NUMALUNO = AULA.NUMALUNO
+AND AULA.NUMDISP = DISCIPLINA.NUMDISP;
+
+-- i) Quais os nomes de alunos reprovados na disciplina de Cálculo Numérico no 1º semestre de 1998.
+SELECT ALUNO.NOME AS 'Alunos reprovados'
+FROM ALUNO, AULA, DISCIPLINA
+WHERE DISCIPLINA.NOME LIKE 'Calculo %'
+AND AULA.NOTA < 7
+AND DISCIPLINA.NUMDISP = AULA.NUMDISP
+AND AULA.NUMALUNO = ALUNO.NUMALUNO;
+
+-- j) Quais os nomes das disciplinas ministradas pelo prof. Ramon Travanti.
+SELECT DISTINCT DISCIPLINA.NOME AS 'Disciplinas desse prof'
+FROM AULA, DISCIPLINA, PROFESSOR
+WHERE PROFESSOR.NOME LIKE 'Ramon%'
+AND PROFESSOR.NUMFUNC = AULA.NUMFUNC
+AND AULA.NUMDISP = DISCIPLINA.NUMDISP;
+
+-- k) Quais os nomes dos professores que já ministraram aula de Banco de Dados.
+SELECT DISTINCT PROFESSOR.NOME AS 'Profs de BD'
+FROM AULA, DISCIPLINA, PROFESSOR
+WHERE DISCIPLINA.NOME LIKE '%Dados'
+AND DISCIPLINA.NUMDISP = AULA.NUMDISP
+AND AULA.NUMFUNC = PROFESSOR.NUMFUNC;
+
+-- l) Qual a maior e a menor nota na disciplina de Cálculo Numérico no 1º semestre de 1998.
+SELECT MAX(AULA.NOTA) AS 'Maior Nota', MIN(AULA.NOTA) AS 'Menor Nota'
+FROM AULA, DISCIPLINA
+WHERE DISCIPLINA.NOME LIKE '%Calc%'
+AND AULA.SEMESTRE = '11998'
+AND DISCIPLINA.NUMDISP = AULA.NUMDISP;
+
+-- m) Qual o nome do aluno que obteve maior nota na disciplina de Engenharia de Software
+-- no 1º semestre de 1998. Deve retornar o nome e a nota do aluno.
+
+SELECT ALUNO.NOME AS 'Nome do Campeão'
+FROM ALUNO, (SELECT AULA.NUMALUNO AS CodAlunoES, MAX(AULA.NOTA) AS MaxNotaES
+			FROM AULA, DISCIPLINA
+			WHERE DISCIPLINA.NOME = 'Engenharia de Software'
+			AND AULA.SEMESTRE = '11998'
+			AND DISCIPLINA.NUMDISP = AULA.NUMDISP) AS TEMP
+WHERE ALUNO.NUMALUNO = TEMP.CodAlunoES;
+
+-- n) Quais os nomes de alunos que cursaram o 1º semestre de 1998 em ordem alfabética, em
+-- cada disciplina oferecida nesse semestre (listar também os nomes das disciplinas e os
+-- nomes dos professores que ministraram cada disciplina).
+
+SELECT ALUNO.NOME AS ALUNO, DISCIPLINA.NOME AS DISCIPLINA, PROFESSOR.NOME AS PROFESSOR
+FROM ALUNO, AULA, DISCIPLINA, PROFESSOR
+ORDER BY ALUNO.NOME ASC, DISCIPLINA.NOME ASC, PROFESSOR.NOME ASC
+WHERE AULA.SEMESTRE = '11998'
+AND ALUNO.NUMALUNO = AULA.NUMALUNO
+AND AULA.NUMDISP = DISCIPLINA.NUMDISP
+AND AULA.NUMFUNC = PROFESSOR.NUMFUNC;
+
+-- o) Quais nomes de alunos, nomes de disciplinas e notas do 1º semestre de 1998 no curso
+-- de Ciência da Computação
+
+SELECT ALUNO.NOME AS ALUNOS,
+	DISCIPLINA.NOME AS DISCIPLINA, 
+	AULA.NOTA AS NOTAS
+FROM ALUNO, AULA, DISCIPLINA, DISCIPLINACURSO, CURSO
+WHERE AULA.SEMESTRE = '11998'
+AND CURSO.NOME LIKE '%NCIA%'
+AND ALUNO.NUMALUNO = AULA.NUMALUNO
+AND AULA.NUMDISP = DISCIPLINA. NUMDISP
+AND DISCIPLINACURSO.NUMDISP = AULA.NUMDISP
+AND DISCIPLINACURSO.NUMCURSO = CURSO.NUMCURSO
+ORDER BY ALUNO.NOME ASC, DISCIPLINA.NOME ASC, AULA.NOTA DESC;

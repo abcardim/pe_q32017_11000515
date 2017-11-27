@@ -1,0 +1,19 @@
+Assunto: Consultas Complexas
+
+Funcao de agregacao exige agrupamento
+
+subconsultas
+Qual a maior quantidade de pedidos feita
+por um cliente ?
+SELECT MAX ( QUANT )
+FROM (SELECT CODCLI, COUNT(CODCLI) AS QUANT
+ FROM PEDIDO
+ GROUP BY CODCLI),
+ 
+ 
+ Exemplo do prof: Não funcionaria o abaixo?
+ 
+ SELECT CLIENTE.NOMECLI, PEDIDO.PRAZENTR
+ FROM CLIENTE, PEDIDO
+ WHERE CLIENTE.CODCLI = PEDIDO.CODCLI
+ AND PEDIDO.PRAZENTR > 15;
